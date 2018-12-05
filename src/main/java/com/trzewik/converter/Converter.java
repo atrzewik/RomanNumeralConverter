@@ -110,6 +110,13 @@ public class Converter {
                 RomanNumeral previousSecondRomanNumeral = RomanNumeral.parse(Character.toString(previousSecondRoman));
                 if (previousSecondRomanNumeral == previousRomanNumeral.getSubtrahend()) {
                     biggestValue = previousRomanNumeral;
+                    if (i>2){
+                        char previousThirdRoman = romanNumeral.charAt(i - 3);
+                        RomanNumeral previousThirdRomanNumeral = RomanNumeral.parse(Character.toString(previousThirdRoman));
+                        if (previousThirdRomanNumeral == currentRomanNumeral){
+                            throw new IllegalArgumentException(WRONG_CHAR_SEQ);
+                        }
+                    }
                 } else {
                     biggestValue = previousSecondRomanNumeral;
                 }

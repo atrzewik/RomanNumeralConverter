@@ -92,6 +92,7 @@ public class ConverterTest {
             thrown.expect(IllegalArgumentException.class);
             thrown.expectMessage(MessageProvider.WRONG_CHAR_SEQ);
             converter.convertRomanToArabic("MCMXCIXM");
+            converter.convertRomanToArabic("MCMM");
         }
 
         @Test
