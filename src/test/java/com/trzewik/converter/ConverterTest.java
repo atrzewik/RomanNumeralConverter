@@ -19,15 +19,15 @@ import static org.junit.Assert.assertEquals;
 public class ConverterTest {
 
     @RunWith(Parameterized.class)
-    public static class ConverterTestParameterized {
+    public static class ConverterTestParameterizedShouldPass {
 
         private Converter converter;
         private int arabic;
         private String roman;
 
-        public ConverterTestParameterized(int arabic, String expected) {
+        public ConverterTestParameterizedShouldPass(int arabic, String roman) {
             this.arabic = arabic;
-            this.roman = expected;
+            this.roman = roman;
         }
 
         @Parameterized.Parameters(name = "arabic: {0} = roman: {1}")
@@ -53,6 +53,39 @@ public class ConverterTest {
             assertEquals(arabic, converter.convertRomanToArabic(roman));
         }
     }
+
+    @RunWith(Parameterized.class)
+    public static class ConverterTestParameterizedShouldNotPass {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+        private Converter converter;
+        private String roman;
+
+        public ConverterTestParameterizedShouldNotPass(String roman) {
+            this.roman = roman;
+        }
+
+        @Parameterized.Parameters(name = "roman: {0}")
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"MCMXCIXM"}, {"MCMM"}, {"XCM"}, {"DXCXXM"}, {"MXM"},
+            });
+        }
+
+        @Before
+        public void initialize() {
+            converter = new Converter();
+        }
+
+        @Test
+        public void shouldNotConvertRomanToArabicBecauseWrongSequence() throws IllegalArgumentException {
+            thrown.expect(IllegalArgumentException.class);
+            thrown.expectMessage(MessageProvider.WRONG_CHAR_SEQ);
+            converter.convertRomanToArabic(roman);
+        }
+    }
+
 
     public static class ConverterTestNotParametrized {
 
@@ -85,14 +118,6 @@ public class ConverterTest {
             thrown.expect(IllegalArgumentException.class);
             thrown.expectMessage(MessageProvider.TO_MANY_SAME_CHARS_IN_ROW);
             converter.convertRomanToArabic("CMMMMMIX");
-        }
-
-        @Test
-        public void shouldNotConvertRomanToArabicBecauseWrongSequence() throws IllegalArgumentException {
-            thrown.expect(IllegalArgumentException.class);
-            thrown.expectMessage(MessageProvider.WRONG_CHAR_SEQ);
-            converter.convertRomanToArabic("MCMXCIXM");
-            converter.convertRomanToArabic("MCMM");
         }
 
         @Test
